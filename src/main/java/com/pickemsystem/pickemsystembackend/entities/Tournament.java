@@ -53,6 +53,17 @@ public class Tournament {
             inverseJoinColumns = @JoinColumn(name = "phase_type_id"))
     private Set<TournamentPhaseType> tournamentPhaseTypes = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "tournament", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private Set<Group> groups = new LinkedHashSet<>();
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
+
     public Set<TournamentPhaseType> getTournamentPhaseTypes() {
         return tournamentPhaseTypes;
     }
