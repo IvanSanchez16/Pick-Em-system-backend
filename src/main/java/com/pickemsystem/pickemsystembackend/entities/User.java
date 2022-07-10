@@ -19,11 +19,9 @@ public class User {
     @Column(name = "email", nullable = false, unique = true, length = 115)
     private String email;
 
-    @Lob
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Lob
     @Column(name = "token")
     private String token;
 

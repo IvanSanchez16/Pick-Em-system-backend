@@ -48,7 +48,7 @@ CREATE TABLE "matches" (
   "id" BIGSERIAL PRIMARY KEY,
   "first_team_id" bigint,
   "second_team_id" bigint,
-  "match_date" datetime
+  "match_date" timestamp
 );
 
 CREATE TABLE "match_results" (
@@ -109,12 +109,6 @@ ALTER TABLE "pickem_tournament_phase" ADD FOREIGN KEY ("phase_type_id") REFERENC
 ALTER TABLE "participants" ADD FOREIGN KEY ("pickem_id") REFERENCES "pickems" ("id");
 
 ALTER TABLE "participants" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "user_group_prediction" ADD FOREIGN KEY ("group_id") REFERENCES "groups" ("id");
-
-ALTER TABLE "user_group_prediction" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "user_group_prediction" ADD FOREIGN KEY ("team_id") REFERENCES "teams" ("id");
 
 ALTER TABLE "tournament_rank" ADD FOREIGN KEY ("tournament_id") REFERENCES "tournaments" ("id");
 
