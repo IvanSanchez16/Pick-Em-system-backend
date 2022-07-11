@@ -22,18 +22,17 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "token")
-    private String token;
-
     @OneToMany(mappedBy = "createdBy", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Tournament> tournaments = new ArrayList<>();
 
     @OneToMany(mappedBy = "created_by", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<Pickem> pickems = new LinkedHashSet<>();
 
-    public String getToken() {
-        return token;
-    }
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new LinkedHashSet<>();
 
     @Column(name = "verified_at")
     private LocalDateTime verifiedAt;
@@ -47,6 +46,14 @@ public class User {
 
     @Column(name = "image_url", nullable = false, length = 120)
     private String imageUrl;
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     @PrePersist
     private void saveCreatedAt(){
@@ -87,10 +94,6 @@ public class User {
 
     public void setVerifiedAt(LocalDateTime verifiedAt) {
         this.verifiedAt = verifiedAt;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getPassword() {
