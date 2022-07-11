@@ -19,7 +19,6 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -47,6 +46,7 @@ public class UserController {
     }
 
     @PostMapping
+    @RequestMapping("/register")
     public ResponseEntity<ApiResponseDTO> save(@RequestBody UserCreateDTO userCreateDTO){
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
