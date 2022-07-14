@@ -17,10 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig{
 
     @Autowired
-    public AuthManager authManager;
-
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    private AuthManager authManager;
+    @Autowired
+    private JWTTokenManager jwtTokenManager;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,8 +30,11 @@ public class SecurityConfig{
         http.authorizeHttpRequests().antMatchers("/api/v1/register").permitAll();
         http.authorizeHttpRequests().anyRequest().authenticated();
 
-        http.addFilterBefore(new CustomAuthenticationFilter(authManager, jwtSecret), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new CustomAuthorizationFilter(jwtSecret), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(
+                new CustomAuthenticationFilter(authManager, jwtTokenManager),
+                UsernamePasswordAuthenticationFilter.class
+        );
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtTokenManager), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -1,4 +1,4 @@
-package com.pickemsystem.pickemsystembackend.security;
+package com.pickemsystem.pickemsystembackend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

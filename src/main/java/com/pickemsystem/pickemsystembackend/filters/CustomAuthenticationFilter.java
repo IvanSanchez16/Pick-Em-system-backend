@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickemsystem.pickemsystembackend.dto.requests.LoginDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
+import com.pickemsystem.pickemsystembackend.security.JWTTokenManager;
 import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -29,12 +30,11 @@ import java.util.stream.Collectors;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final JWTTokenManager jwtTokenManager;
 
-    private final String jwtSecret;
-
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, String jwtSecret) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JWTTokenManager jwtTokenManager) {
         this.authenticationManager = authenticationManager;
-        this.jwtSecret = jwtSecret;
+        this.jwtTokenManager = jwtTokenManager;
     }
 
     @Override
@@ -49,8 +49,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        String username = request.getParameter("username");
-//        String password = request.getParameter("password");
+
         UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(username, password);
 
         return authenticationManager.authenticate(user);
@@ -58,20 +57,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String username = authResult.getPrincipal().toString();
-        Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
-
-        String accessToken = JWT.create()
-                .withSubject(username)
-                .withExpiresAt(new Date(System.currentTimeMillis() + (10 * 60 * 1000)))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", authResult.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
-        String refreshToken = JWT.create()
-                .withSubject(username)
-                .withExpiresAt(new Date(System.currentTimeMillis() + (30 * 60 * 1000)))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
+        String accessToken = jwtTokenManager.generateAccessToken(authResult, request.getRequestURL().toString());
+        String refreshToken = jwtTokenManager.generateRefreshToken(authResult, request.getRequestURL().toString());
 
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
         Map<String, String> tokens = new HashMap<>();

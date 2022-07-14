@@ -1,5 +1,10 @@
 package com.pickemsystem.pickemsystembackend.controllers;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.pickemsystem.pickemsystembackend.dto.requests.UserCreateDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.UserDTO;
@@ -9,19 +14,31 @@ import com.pickemsystem.pickemsystembackend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
+
+import static java.util.Arrays.stream;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -55,5 +72,34 @@ public class UserController {
         userService.save(user);
         apiResponseDTO.setData(userCreateDTO);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/refreshToken")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response){
+        String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")) {
+            try {
+                String token = autorizationHeader.substring(7);
+
+                Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+
+                DecodedJWT decodedJWT = verifier.verify(token);
+                String username = decodedJWT.getSubject();
+                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+
+                Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } catch (IllegalArgumentException | JWTVerificationException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Refresh token is missing");
+        }
+
     }
 }
