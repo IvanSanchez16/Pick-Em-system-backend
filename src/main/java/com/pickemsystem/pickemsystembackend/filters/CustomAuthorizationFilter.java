@@ -1,8 +1,5 @@
 package com.pickemsystem.pickemsystembackend.filters;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.pickemsystem.pickemsystembackend.security.JWTTokenManager;
@@ -32,7 +29,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/api/v1/login"))
+        if (request.getServletPath().equals("/login") || request.getServletPath().equals("/registry") )
             filterChain.doFilter(request, response);
         else {
             String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

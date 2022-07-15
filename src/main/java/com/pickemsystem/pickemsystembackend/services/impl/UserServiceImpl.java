@@ -2,6 +2,7 @@ package com.pickemsystem.pickemsystembackend.services.impl;
 
 import com.pickemsystem.pickemsystembackend.entities.User;
 import com.pickemsystem.pickemsystembackend.repositories.UserRepository;
+import com.pickemsystem.pickemsystembackend.security.EncoderManager;
 import com.pickemsystem.pickemsystembackend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private EncoderManager encoderManager;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public User save(User user) {
-        user.setPassword( passwordEncoder.encode(user.getPassword()) );
+        user.setPassword( encoderManager.encode(user.getPassword()) );
         return userRepository.save(user);
     }
 }

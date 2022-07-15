@@ -1,5 +1,6 @@
 package com.pickemsystem.pickemsystembackend;
 
+import com.pickemsystem.pickemsystembackend.security.EncoderManager;
 import com.pickemsystem.pickemsystembackend.services.impl.UserServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -16,11 +17,6 @@ public class PickemsystembackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PickemsystembackendApplication.class, args);
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
 	}
 
 	@Bean

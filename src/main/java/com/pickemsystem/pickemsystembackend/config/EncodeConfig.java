@@ -7,13 +7,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "security.jwt")
+@ConfigurationProperties(prefix = "security.encode")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class JwtConfig {
+public class EncodeConfig {
 
-    private String secret;
-    private int durationAccessToken;
-    private int durationRefreshToken;
+    private int strong;
 }

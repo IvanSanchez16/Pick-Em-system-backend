@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class AuthManager implements AuthenticationManager {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private EncoderManager encoderManager;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -27,7 +27,7 @@ public class AuthManager implements AuthenticationManager {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        if (passwordEncoder.matches((CharSequence) authentication.getCredentials(), userDetails.getPassword())){
+        if (encoderManager.matches(authentication.getCredentials().toString(), userDetails.getPassword())){
             userAuth = new UsernamePasswordAuthenticationToken(
                     authentication.getPrincipal(),
                     authentication.getCredentials(),

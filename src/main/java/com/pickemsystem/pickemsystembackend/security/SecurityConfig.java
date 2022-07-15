@@ -26,8 +26,9 @@ public class SecurityConfig{
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeHttpRequests().antMatchers("/api/v1/login").permitAll();
-        http.authorizeHttpRequests().antMatchers("/api/v1/register").permitAll();
+        http.authorizeHttpRequests().antMatchers("/login").permitAll();
+        http.authorizeHttpRequests().antMatchers("/registry").permitAll();
+        http.authorizeHttpRequests().antMatchers("/refreshToken").permitAll();
         http.authorizeHttpRequests().anyRequest().authenticated();
 
         http.addFilterBefore(

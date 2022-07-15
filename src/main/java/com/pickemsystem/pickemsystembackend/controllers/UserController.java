@@ -1,8 +1,5 @@
 package com.pickemsystem.pickemsystembackend.controllers;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.pickemsystem.pickemsystembackend.dto.requests.UserCreateDTO;
@@ -12,9 +9,6 @@ import com.pickemsystem.pickemsystembackend.entities.User;
 import com.pickemsystem.pickemsystembackend.mappers.UserMapper;
 import com.pickemsystem.pickemsystembackend.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,17 +31,10 @@ import static java.util.Arrays.stream;
 public class UserController {
 
     private final UserService userService;
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponseDTO> getUserById(@PathVariable(value = "userId")Long userId){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        logger.info("Datos del usuario: {}", auth.getPrincipal());
-        logger.info("Datos de los permisos: {}", auth.getAuthorities());
-        logger.info("Esta autenticado: {}", auth.isAuthenticated());
 
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
         Optional<User> optionalUser = userService.findById(userId);
@@ -63,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping
-    @RequestMapping("/register")
+    @RequestMapping("/registry")
     public ResponseEntity<ApiResponseDTO> save(@RequestBody UserCreateDTO userCreateDTO){
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
@@ -76,30 +63,27 @@ public class UserController {
 
     @GetMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response){
-        String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")) {
-            try {
-                String token = autorizationHeader.substring(7);
-
-                Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
-
-                DecodedJWT decodedJWT = verifier.verify(token);
-                String username = decodedJWT.getSubject();
-                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-
-                Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(username, null, authorities);
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            } catch (IllegalArgumentException | JWTVerificationException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            throw new RuntimeException("Refresh token is missing");
-        }
+//        String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+//        if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")) {
+//            try {
+//                String token = autorizationHeader.substring(7);
+//
+//                //DecodedJWT decodedJWT = verifier.verify(token);
+//                String username = decodedJWT.getSubject();
+//                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+//
+//                Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//                stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+//
+//                UsernamePasswordAuthenticationToken authenticationToken =
+//                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+//                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//            } catch (IllegalArgumentException | JWTVerificationException e) {
+//                throw new RuntimeException(e);
+//            }
+//        } else {
+//            throw new RuntimeException("Refresh token is missing");
+//        }
 
     }
 }

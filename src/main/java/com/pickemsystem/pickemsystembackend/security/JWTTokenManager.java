@@ -5,8 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.pickemsystem.pickemsystembackend.config.JwtConfig;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -21,7 +19,6 @@ public class JWTTokenManager {
     private final Algorithm algorithm;
     private final JWTVerifier verifier;
 
-    @Autowired
     public JWTTokenManager(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
         this.algorithm = Algorithm.HMAC256(this.jwtConfig.getSecret().getBytes());
