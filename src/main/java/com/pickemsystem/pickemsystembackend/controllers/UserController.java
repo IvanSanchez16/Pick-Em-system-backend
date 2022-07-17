@@ -8,6 +8,7 @@ import com.pickemsystem.pickemsystembackend.dto.responses.UserDTO;
 import com.pickemsystem.pickemsystembackend.entities.User;
 import com.pickemsystem.pickemsystembackend.mappers.UserMapper;
 import com.pickemsystem.pickemsystembackend.services.UserService;
+import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,8 +53,18 @@ public class UserController {
     @PostMapping
     @RequestMapping("/registry")
     public ResponseEntity<ApiResponseDTO> save(@RequestBody UserCreateDTO userCreateDTO){
-        ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
+        ApiResponseDTO apiResponseDTO;
 
+        if (userService.existsByEmail(userCreateDTO.getEmail())){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.EMAIL_TAKEN);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
+        }
+        if (userService.existsByUsername(userCreateDTO.getUsername())){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.USERNAME_TAKEN);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
+        }
+
+        apiResponseDTO = new ApiResponseDTO();
         User user = UserMapper.mapToEntity(userCreateDTO);
 
         userService.save(user);

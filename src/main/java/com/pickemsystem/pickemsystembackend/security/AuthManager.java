@@ -1,6 +1,7 @@
 package com.pickemsystem.pickemsystembackend.security;
 
 import com.pickemsystem.pickemsystembackend.exceptions.AuthExcepcion;
+import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +38,6 @@ public class AuthManager implements AuthenticationManager {
 
             return userAuth;
         }
-        throw new AuthExcepcion("The password is incorrect");
+        throw new AuthExcepcion(AppMessages.INCORRECT_PASSWORD);
     }
 }

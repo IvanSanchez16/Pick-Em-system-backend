@@ -4,13 +4,12 @@ import com.pickemsystem.pickemsystembackend.entities.User;
 import com.pickemsystem.pickemsystembackend.repositories.UserRepository;
 import com.pickemsystem.pickemsystembackend.security.EncoderManager;
 import com.pickemsystem.pickemsystembackend.services.UserService;
-import lombok.RequiredArgsConstructor;
+import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +30,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isEmpty())
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(AppMessages.USERNAME_NOT_EXISTS);
 
         User user = optionalUser.get();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -43,6 +42,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional(readOnly = true)
     public Optional<User> findById(Long id){
         return userRepository.findById(id);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override

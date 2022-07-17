@@ -67,4 +67,14 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         new ObjectMapper().writeValue(response.getOutputStream(), apiResponseDTO);
     }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO(failed.getMessage());
+
+        new ObjectMapper().writeValue(response.getOutputStream(), apiResponseDTO);
+    }
 }

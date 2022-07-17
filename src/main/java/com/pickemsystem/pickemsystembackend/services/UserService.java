@@ -9,5 +9,9 @@ public interface UserService {
 
     Optional<User> findById(Long id);
 
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
     User save(User user);
 }
