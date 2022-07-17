@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class UserController {
 
     @PostMapping
     @RequestMapping("/registry")
-    public ResponseEntity<ApiResponseDTO> save(@RequestBody UserCreateDTO userCreateDTO){
+    public ResponseEntity<ApiResponseDTO> save(@RequestBody @Valid UserCreateDTO userCreateDTO){
         ApiResponseDTO apiResponseDTO;
 
         if (userService.existsByEmail(userCreateDTO.getEmail())){
