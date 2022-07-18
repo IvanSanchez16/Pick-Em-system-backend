@@ -86,6 +86,19 @@ CREATE TABLE "tournament_rank" (
   PRIMARY KEY ("tournament_id", "user_id")
 );
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE "confirmation_tokens"(
+	"uuid" uuid default uuid_generate_v4(),
+	"user_id" bigint,
+	"token" varchar(255),
+	"created_at" timestamp,
+	"expired_at" timestamp,
+	PRIMARY KEY ("uuid")
+);
+
+ALTER TABLE "confirmation_tokens" ADD FOREIGN KEY ("user_id") REFERENCES "users"("id");
+
 ALTER TABLE "tournaments_phases" ADD FOREIGN KEY ("tournament_id") REFERENCES "tournaments" ("id");
 
 ALTER TABLE "tournaments_phases" ADD FOREIGN KEY ("phase_type_id") REFERENCES "tournaments_phase_types" ("id");

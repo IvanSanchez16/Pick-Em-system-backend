@@ -10,7 +10,7 @@ public class UserMapper {
         UserDTO userDTO = new UserDTO();
 
         userDTO.setId(user.getId());
-        userDTO.setUsername(userDTO.getUsername());
+        userDTO.setUsername(user.getUsername());
         userDTO.setImageUrl(user.getImageUrl());
 
         return userDTO;

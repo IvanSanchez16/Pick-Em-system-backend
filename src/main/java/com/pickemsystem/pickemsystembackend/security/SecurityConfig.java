@@ -29,6 +29,7 @@ public class SecurityConfig{
         http.authorizeHttpRequests().antMatchers("/login").permitAll();
         http.authorizeHttpRequests().antMatchers("/registry").permitAll();
         http.authorizeHttpRequests().antMatchers("/refreshToken").permitAll();
+        http.authorizeHttpRequests().antMatchers("/verify/**").permitAll();
         http.authorizeHttpRequests().anyRequest().authenticated();
 
         http.addFilterBefore(

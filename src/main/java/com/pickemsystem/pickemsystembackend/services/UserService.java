@@ -2,6 +2,7 @@ package com.pickemsystem.pickemsystembackend.services;
 
 import com.pickemsystem.pickemsystembackend.entities.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,6 @@ public interface UserService {
     boolean existsByEmail(String email);
 
     User save(User user);
+
+    boolean verifyUser(Long userId);
 }

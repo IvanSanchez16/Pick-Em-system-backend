@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isEmpty())
-            throw new UsernameNotFoundException(AppMessages.USERNAME_NOT_EXISTS);
+            throw new UsernameNotFoundException(AppMessages.USER_NOT_EXISTS);
 
         User user = optionalUser.get();
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -59,5 +60,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User save(User user) {
         user.setPassword( encoderManager.encode(user.getPassword()) );
         return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public boolean verifyUser(Long userId) {
+        return userRepository.verifyUser(LocalDateTime.now(), userId) > 0;
     }
 }

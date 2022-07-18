@@ -5,11 +5,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.pickemsystem.pickemsystembackend.dto.requests.UserCreateDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.UserDTO;
+import com.pickemsystem.pickemsystembackend.entities.ConfirmationToken;
 import com.pickemsystem.pickemsystembackend.entities.User;
 import com.pickemsystem.pickemsystembackend.mappers.UserMapper;
+import com.pickemsystem.pickemsystembackend.services.ConfirmationTokenService;
 import com.pickemsystem.pickemsystembackend.services.UserService;
 import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Arrays.stream;
 
@@ -33,6 +38,8 @@ import static java.util.Arrays.stream;
 public class UserController {
 
     private final UserService userService;
+
+    private final ConfirmationTokenService confirmationTokenService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponseDTO> getUserById(@PathVariable(value = "userId")Long userId){
@@ -67,10 +74,56 @@ public class UserController {
 
         apiResponseDTO = new ApiResponseDTO();
         User user = UserMapper.mapToEntity(userCreateDTO);
-
         userService.save(user);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken();
+        confirmationToken.setUuid(UUID.randomUUID());
+        confirmationToken.setToken(UUID.randomUUID().toString());
+        confirmationToken.setUser(user);
+        confirmationToken.setCreatedAt(LocalDateTime.now());
+        confirmationToken.setExpiredAt(LocalDateTime.now().plusMinutes(15));
+        confirmationTokenService.save(confirmationToken);
+
         apiResponseDTO.setData(userCreateDTO);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/verify/{user}")
+    public ResponseEntity<ApiResponseDTO> verifyEmail(@PathVariable(name = "user") Long userId, @RequestParam String token){
+        ApiResponseDTO apiResponseDTO;
+        Optional<User> optionalUser = userService.findById(userId);
+        if (optionalUser.isEmpty()){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.USER_NOT_EXISTS);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.NOT_FOUND);
+        }
+        User user = optionalUser.get();
+
+        if (user.getVerifiedAt() != null){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.USER_ALREADY_VERIFIED);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
+        }
+
+        Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findByTokenAndUser(token, user.getId());
+        if (optionalConfirmationToken.isEmpty()){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.INVALID_EMAIL_TOKEN);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.BAD_REQUEST);
+        }
+        ConfirmationToken confirmationToken = optionalConfirmationToken.get();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expireDateToken = confirmationToken.getExpiredAt();
+        if (now.isAfter(expireDateToken)){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.EXPIRED_EMAIL_TOKEN);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.BAD_REQUEST);
+        }
+
+        if (!userService.verifyUser(userId)){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        apiResponseDTO = new ApiResponseDTO(AppMessages.USER_VERIFIED);
+        return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/refreshToken")
