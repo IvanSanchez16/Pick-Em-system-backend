@@ -2,6 +2,7 @@ package com.pickemsystem.pickemsystembackend.controllers;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickemsystem.pickemsystembackend.dto.requests.UserCreateDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.UserDTO;
@@ -12,9 +13,9 @@ import com.pickemsystem.pickemsystembackend.services.ConfirmationTokenService;
 import com.pickemsystem.pickemsystembackend.services.UserService;
 import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,11 +26,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static java.util.Arrays.stream;
 
@@ -128,27 +127,30 @@ public class UserController {
 
     @GetMapping("/refreshToken")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response){
-//        String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-//        if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")) {
-//            try {
-//                String token = autorizationHeader.substring(7);
-//
-//                //DecodedJWT decodedJWT = verifier.verify(token);
-//                String username = decodedJWT.getSubject();
-//                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-//
-//                Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-//                stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-//
-//                UsernamePasswordAuthenticationToken authenticationToken =
-//                        new UsernamePasswordAuthenticationToken(username, null, authorities);
-//                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//            } catch (IllegalArgumentException | JWTVerificationException e) {
-//                throw new RuntimeException(e);
-//            }
-//        } else {
-//            throw new RuntimeException("Refresh token is missing");
-//        }
+        String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")) {
+            String refreshToken = autorizationHeader.substring(7);
+            String newAccessToken = userService.refreshAccessToken(request.getRequestURL().toString(), refreshToken);
+
+            ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("access_token", newAccessToken);
+            tokens.put("refresh_token", refreshToken);
+
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            apiResponseDTO.setMessage(AppMessages.SUCCESSFUL_TOKEN_REFRESH);
+            apiResponseDTO.setData(tokens);
+
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), apiResponseDTO);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Refresh token is missing");
+        }
 
     }
 }

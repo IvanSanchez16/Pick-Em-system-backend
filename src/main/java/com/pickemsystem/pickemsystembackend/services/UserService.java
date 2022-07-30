@@ -17,4 +17,6 @@ public interface UserService {
     User save(User user);
 
     boolean verifyUser(Long userId);
+
+    public String refreshAccessToken(String requestURL, String refreshToken);
 }
