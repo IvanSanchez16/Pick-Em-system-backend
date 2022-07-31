@@ -1,7 +1,5 @@
 package com.pickemsystem.pickemsystembackend.controllers;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pickemsystem.pickemsystembackend.dto.requests.UserCreateDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
@@ -17,9 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,7 +108,7 @@ public class UserController {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireDateToken = confirmationToken.getExpiredAt();
         if (now.isAfter(expireDateToken)){
-            apiResponseDTO = new ApiResponseDTO(AppMessages.EXPIRED_EMAIL_TOKEN);
+            apiResponseDTO = new ApiResponseDTO(AppMessages.EXPIRED_TOKEN);
             return new ResponseEntity<>(apiResponseDTO, HttpStatus.BAD_REQUEST);
         }
 

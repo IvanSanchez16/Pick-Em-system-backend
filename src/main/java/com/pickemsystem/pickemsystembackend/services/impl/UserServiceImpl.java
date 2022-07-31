@@ -3,6 +3,7 @@ package com.pickemsystem.pickemsystembackend.services.impl;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.pickemsystem.pickemsystembackend.entities.User;
+import com.pickemsystem.pickemsystembackend.exceptions.AuthExcepcion;
 import com.pickemsystem.pickemsystembackend.repositories.UserRepository;
 import com.pickemsystem.pickemsystembackend.security.EncoderManager;
 import com.pickemsystem.pickemsystembackend.security.JWTTokenManager;
@@ -81,18 +82,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public String refreshAccessToken(String requestURL, String refreshToken){
         UsernamePasswordAuthenticationToken authenticationToken;
 
-        try {
-            DecodedJWT decodedJWT = jwtTokenManager.decodeJWT(refreshToken);
-            String username = decodedJWT.getSubject();
+        DecodedJWT decodedJWT = jwtTokenManager.decodeJWT(refreshToken);
+        String username = decodedJWT.getSubject();
 
-            UserDetails userDetails = loadUserByUsername(username);
+        UserDetails userDetails = loadUserByUsername(username);
 
-            authenticationToken =
-                    new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        } catch (IllegalArgumentException | JWTVerificationException e) {
-            throw new RuntimeException(e);
-        }
+        authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         return jwtTokenManager.generateAccessToken(authenticationToken, requestURL);
     }

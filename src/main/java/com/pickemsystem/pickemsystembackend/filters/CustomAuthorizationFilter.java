@@ -1,9 +1,14 @@
 package com.pickemsystem.pickemsystembackend.filters;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
 import com.pickemsystem.pickemsystembackend.security.JWTTokenManager;
+import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,10 +41,19 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         else {
             String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")){
-                try {
-                    String token = autorizationHeader.substring(7);
+                String token = autorizationHeader.substring(7);
 
-                    DecodedJWT decodedJWT = jwtTokenManager.decodeJWT(token);
+                DecodedJWT decodedJWT = null;
+                try {
+                    decodedJWT = jwtTokenManager.decodeJWT(token);
+                } catch (TokenExpiredException e) {
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                    new ObjectMapper().writeValue(response.getOutputStream(), new ApiResponseDTO(AppMessages.EXPIRED_TOKEN));
+                }
+
+                if (decodedJWT != null){
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
 
@@ -50,8 +64,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
-                } catch (IllegalArgumentException | JWTVerificationException e) {
-                    throw new RuntimeException(e);
                 }
             } else
                 filterChain.doFilter(request, response);

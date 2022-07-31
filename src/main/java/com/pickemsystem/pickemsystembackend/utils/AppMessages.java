@@ -5,6 +5,7 @@ public class AppMessages {
     // Errors messages
     public static final String INTERNAL_SERVER_ERROR = "An internal server error have occurred";
 
+
     // Success messages
     public static final String SUCCESSFUL_LOGIN = "Successful login";
     public static final String SUCCESSFUL_TOKEN_REFRESH = "Successful token refresh";
@@ -13,7 +14,7 @@ public class AppMessages {
 
     // Bad requests messages
     public static final String INVALID_EMAIL_TOKEN = "The given token is invalid";
-    public static final String EXPIRED_EMAIL_TOKEN = "The given token expired";
+    public static final String EXPIRED_TOKEN = "The given token expired";
     public static final String INVALID_REQUEST = "Theres one or more invalid values in request";
     public static final String INCORRECT_PASSWORD = "The given password is incorrect";
     public static final String USER_NOT_EXISTS = "The given user not exists";
