@@ -1,6 +1,6 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.main_entities;
 
-import com.pickemsystem.pickemsystembackend.entities.compositeIds.PickemParticipantId;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.composite_ids.PickemParticipantId;
 
 import javax.persistence.*;
 import java.util.Objects;

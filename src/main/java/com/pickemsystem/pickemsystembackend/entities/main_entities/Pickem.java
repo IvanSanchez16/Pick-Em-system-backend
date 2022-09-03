@@ -1,4 +1,4 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.main_entities;
 
 import org.hibernate.Hibernate;
 
@@ -19,12 +19,26 @@ public class Pickem {
     @Column(name = "is_public", nullable = false)
     private Boolean isPublic = false;
 
+    @Column(name = "image_url", nullable = false, length = 120)
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private User created_by;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime created_at;
+
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public LocalDateTime getCreated_at() {
         return created_at;
@@ -64,6 +78,22 @@ public class Pickem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override

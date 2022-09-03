@@ -1,6 +1,6 @@
 package com.pickemsystem.pickemsystembackend.services;
 
-import com.pickemsystem.pickemsystembackend.entities.Region;
+import com.pickemsystem.pickemsystembackend.entities.matches_entities.Region;
 
 import java.util.List;
 

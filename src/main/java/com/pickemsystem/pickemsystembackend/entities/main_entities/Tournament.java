@@ -1,6 +1,6 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.main_entities;
 
-import lombok.EqualsAndHashCode;
+import com.pickemsystem.pickemsystembackend.entities.groups_entities.Group;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,20 +10,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tournaments")
-@EqualsAndHashCode
 public class Tournament {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Column(name = "name", nullable = false, length = 80)
     private String name;
@@ -55,6 +46,14 @@ public class Tournament {
 
     @OneToMany(mappedBy = "tournament", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<Group> groups = new LinkedHashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Set<Group> getGroups() {
         return groups;

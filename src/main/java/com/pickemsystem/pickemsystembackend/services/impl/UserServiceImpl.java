@@ -1,9 +1,7 @@
 package com.pickemsystem.pickemsystembackend.services.impl;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.pickemsystem.pickemsystembackend.entities.User;
-import com.pickemsystem.pickemsystembackend.exceptions.AuthExcepcion;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
 import com.pickemsystem.pickemsystembackend.repositories.UserRepository;
 import com.pickemsystem.pickemsystembackend.security.EncoderManager;
 import com.pickemsystem.pickemsystembackend.security.JWTTokenManager;

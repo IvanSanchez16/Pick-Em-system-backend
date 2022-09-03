@@ -1,9 +1,7 @@
 package com.pickemsystem.pickemsystembackend.services;
 
-import com.pickemsystem.pickemsystembackend.entities.User;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {

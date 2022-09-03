@@ -1,10 +1,9 @@
 package com.pickemsystem.pickemsystembackend.services.impl;
 
-import com.pickemsystem.pickemsystembackend.entities.Region;
+import com.pickemsystem.pickemsystembackend.entities.matches_entities.Region;
 import com.pickemsystem.pickemsystembackend.repositories.RegionRepository;
 import com.pickemsystem.pickemsystembackend.services.RegionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

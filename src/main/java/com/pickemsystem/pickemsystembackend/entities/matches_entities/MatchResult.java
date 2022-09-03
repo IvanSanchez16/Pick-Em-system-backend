@@ -1,6 +1,4 @@
-package com.pickemsystem.pickemsystembackend.entities;
-
-import lombok.EqualsAndHashCode;
+package com.pickemsystem.pickemsystembackend.entities.matches_entities;
 
 import javax.persistence.*;
 import java.util.Objects;

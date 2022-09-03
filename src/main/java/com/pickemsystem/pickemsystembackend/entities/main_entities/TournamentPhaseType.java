@@ -1,5 +1,6 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.main_entities;
 
+import com.pickemsystem.pickemsystembackend.entities.main_entities.Tournament;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
@@ -8,13 +9,15 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tournaments_phase_types")
-@EqualsAndHashCode
 public class TournamentPhaseType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
+
+    @Column(name = "name", nullable = false, length = 50)
+    private String name;
 
     @ManyToMany(mappedBy = "tournamentPhaseTypes", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Tournament> tournaments = new LinkedHashSet<>();
@@ -26,9 +29,6 @@ public class TournamentPhaseType {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
 
     public Set<Tournament> getTournaments() {
         return tournaments;

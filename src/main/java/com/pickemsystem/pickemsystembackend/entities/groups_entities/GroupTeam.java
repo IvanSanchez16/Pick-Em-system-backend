@@ -1,6 +1,7 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.groups_entities;
 
-import com.pickemsystem.pickemsystembackend.entities.compositeIds.GroupTeamId;
+import com.pickemsystem.pickemsystembackend.entities.groups_entities.composite_ids.GroupTeamId;
+import com.pickemsystem.pickemsystembackend.entities.matches_entities.Team;
 
 import javax.persistence.*;
 

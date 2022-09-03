@@ -1,7 +1,7 @@
 package com.pickemsystem.pickemsystembackend.mappers;
 
 import com.pickemsystem.pickemsystembackend.dto.requests.RegionCreateDTO;
-import com.pickemsystem.pickemsystembackend.entities.Region;
+import com.pickemsystem.pickemsystembackend.entities.matches_entities.Region;
 
 public class RegionMapper {
 

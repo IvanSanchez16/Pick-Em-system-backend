@@ -2,7 +2,7 @@ package com.pickemsystem.pickemsystembackend.mappers;
 
 import com.pickemsystem.pickemsystembackend.dto.requests.UserCreateDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.UserDTO;
-import com.pickemsystem.pickemsystembackend.entities.User;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
 
 public class UserMapper {
 

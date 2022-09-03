@@ -1,6 +1,4 @@
-package com.pickemsystem.pickemsystembackend.entities;
-
-import lombok.EqualsAndHashCode;
+package com.pickemsystem.pickemsystembackend.entities.matches_entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,11 +16,11 @@ public class Match implements Serializable {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "first_team_id", nullable = false)
-    private Team localTeam;
+    private Team firstTeam;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "second_team_id", nullable = false)
-    private Team awayTeam;
+    private Team secondTeam;
 
     @Column(name = "match_date", nullable = false)
     private LocalDateTime matchDate;
@@ -46,20 +44,20 @@ public class Match implements Serializable {
         this.matchDate = matchDate;
     }
 
-    public Team getAwayTeam() {
-        return awayTeam;
+    public Team getSecondTeam() {
+        return secondTeam;
     }
 
-    public void setAwayTeam(Team awayTeam) {
-        this.awayTeam = awayTeam;
+    public void setSecondTeam(Team secondTeam) {
+        this.secondTeam = secondTeam;
     }
 
-    public Team getLocalTeam() {
-        return localTeam;
+    public Team getFirstTeam() {
+        return firstTeam;
     }
 
-    public void setLocalTeam(Team localTeam) {
-        this.localTeam = localTeam;
+    public void setFirstTeam(Team firstTeam) {
+        this.firstTeam = firstTeam;
     }
 
     public Long getId() {

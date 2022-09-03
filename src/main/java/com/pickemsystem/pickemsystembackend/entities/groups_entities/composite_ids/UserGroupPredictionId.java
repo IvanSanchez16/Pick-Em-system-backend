@@ -1,4 +1,4 @@
-package com.pickemsystem.pickemsystembackend.entities.compositeIds;
+package com.pickemsystem.pickemsystembackend.entities.groups_entities.composite_ids;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

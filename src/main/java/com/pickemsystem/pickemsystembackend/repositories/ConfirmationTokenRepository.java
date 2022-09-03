@@ -1,6 +1,6 @@
 package com.pickemsystem.pickemsystembackend.repositories;
 
-import com.pickemsystem.pickemsystembackend.entities.ConfirmationToken;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.ConfirmationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

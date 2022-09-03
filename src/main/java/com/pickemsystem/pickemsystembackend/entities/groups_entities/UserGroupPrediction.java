@@ -1,6 +1,8 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.groups_entities;
 
-import com.pickemsystem.pickemsystembackend.entities.compositeIds.UserGroupPredictionId;
+import com.pickemsystem.pickemsystembackend.entities.groups_entities.composite_ids.UserGroupPredictionId;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
+import com.pickemsystem.pickemsystembackend.entities.matches_entities.Team;
 
 import javax.persistence.*;
 

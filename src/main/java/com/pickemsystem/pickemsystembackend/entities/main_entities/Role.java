@@ -1,4 +1,4 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.main_entities;
 
 import org.hibernate.Hibernate;
 

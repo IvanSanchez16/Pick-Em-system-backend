@@ -1,4 +1,6 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.groups_entities;
+
+import com.pickemsystem.pickemsystembackend.entities.main_entities.Tournament;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;

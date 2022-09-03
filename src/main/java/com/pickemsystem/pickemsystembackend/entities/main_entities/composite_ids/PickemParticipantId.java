@@ -1,4 +1,4 @@
-package com.pickemsystem.pickemsystembackend.entities.compositeIds;
+package com.pickemsystem.pickemsystembackend.entities.main_entities.composite_ids;
 
 import javax.persistence.*;
 import java.io.Serializable;

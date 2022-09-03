@@ -1,6 +1,6 @@
-package com.pickemsystem.pickemsystembackend.entities;
+package com.pickemsystem.pickemsystembackend.entities.main_entities;
 
-import com.pickemsystem.pickemsystembackend.entities.compositeIds.PickemTournamentPhaseId;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.composite_ids.PickemTournamentPhaseId;
 
 import javax.persistence.*;
 

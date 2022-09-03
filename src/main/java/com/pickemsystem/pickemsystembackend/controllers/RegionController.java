@@ -2,7 +2,7 @@ package com.pickemsystem.pickemsystembackend.controllers;
 
 import com.pickemsystem.pickemsystembackend.dto.requests.RegionCreateDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
-import com.pickemsystem.pickemsystembackend.entities.Region;
+import com.pickemsystem.pickemsystembackend.entities.matches_entities.Region;
 import com.pickemsystem.pickemsystembackend.mappers.RegionMapper;
 import com.pickemsystem.pickemsystembackend.services.RegionService;
 import com.pickemsystem.pickemsystembackend.utils.AppMessages;

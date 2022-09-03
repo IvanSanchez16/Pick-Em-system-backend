@@ -1,6 +1,6 @@
 package com.pickemsystem.pickemsystembackend.services;
 
-import com.pickemsystem.pickemsystembackend.entities.ConfirmationToken;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.ConfirmationToken;
 import com.pickemsystem.pickemsystembackend.repositories.ConfirmationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

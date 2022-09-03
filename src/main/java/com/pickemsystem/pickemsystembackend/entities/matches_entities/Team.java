@@ -1,12 +1,9 @@
-package com.pickemsystem.pickemsystembackend.entities;
-
-import lombok.EqualsAndHashCode;
+package com.pickemsystem.pickemsystembackend.entities.matches_entities;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "teams")
-@EqualsAndHashCode
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
