@@ -6,7 +6,7 @@ import com.pickemsystem.pickemsystembackend.entities.matches_entities.Match;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "knockout_match")
+@Table(name = "knockout_matches")
 public class KnockoutMatch {
     @Id
     @Column(name = "knockout_match_id", nullable = false)
