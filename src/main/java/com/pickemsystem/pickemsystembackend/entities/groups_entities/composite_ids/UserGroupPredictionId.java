@@ -16,6 +16,17 @@ public class UserGroupPredictionId implements Serializable {
     @Column(name = "team_id")
     private Long teamId;
 
+    @Column(name = "pickem_id", nullable = false)
+    private Long pickemId;
+
+    public Long getPickemId() {
+        return pickemId;
+    }
+
+    public void setPickemId(Long pickemId) {
+        this.pickemId = pickemId;
+    }
+
     public Long getTeamId() {
         return teamId;
     }

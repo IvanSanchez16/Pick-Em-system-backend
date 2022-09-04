@@ -1,6 +1,7 @@
 package com.pickemsystem.pickemsystembackend.entities.groups_entities;
 
 import com.pickemsystem.pickemsystembackend.entities.groups_entities.composite_ids.UserGroupPredictionId;
+import com.pickemsystem.pickemsystembackend.entities.main_entities.Pickem;
 import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
 import com.pickemsystem.pickemsystembackend.entities.matches_entities.Team;
 
@@ -24,8 +25,20 @@ public class UserGroupPrediction {
     @MapsId("teamId")
     private Team team;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @MapsId("pickemId")
+    private Pickem pickem;
+
     @Column(name = "position", nullable = false)
     private Short position;
+
+    public Pickem getPickem() {
+        return pickem;
+    }
+
+    public void setPickem(Pickem pickem) {
+        this.pickem = pickem;
+    }
 
     public Short getPosition() {
         return position;

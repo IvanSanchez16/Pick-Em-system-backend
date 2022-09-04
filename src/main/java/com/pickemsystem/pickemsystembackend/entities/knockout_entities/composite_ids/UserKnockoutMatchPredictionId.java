@@ -8,11 +8,22 @@ import java.util.Objects;
 @Embeddable
 public class UserKnockoutMatchPredictionId implements Serializable {
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
     @Column(name = "knockout_match_id", nullable = false)
     private Long knockoutMatchId;
+
+    @Column(name = "pickem_id", nullable = false)
+    private Long pickemId;
+
+    public Long getPickemId() {
+        return pickemId;
+    }
+
+    public void setPickemId(Long pickemId) {
+        this.pickemId = pickemId;
+    }
 
     public Long getKnockoutMatchId() {
         return knockoutMatchId;

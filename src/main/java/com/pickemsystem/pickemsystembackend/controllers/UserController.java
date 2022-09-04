@@ -79,7 +79,8 @@ public class UserController {
         confirmationToken.setExpiredAt(LocalDateTime.now().plusMinutes(15));
         confirmationTokenService.save(confirmationToken);
 
-        apiResponseDTO.setData(userCreateDTO);
+        UserDTO userDTO = UserMapper.mapToDTO(user);
+        apiResponseDTO.setData(userDTO);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.CREATED);
     }
 
