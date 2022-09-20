@@ -32,9 +32,9 @@ public class RegionController {
     public ResponseEntity<ApiResponseDTO> save(@RequestBody @Valid RegionCreateDTO regionCreateDTO){
         Region region = RegionMapper.mapToEntity(regionCreateDTO);
 
-        region = regionService.save(region);
+        region = regionService.save(region, regionCreateDTO.getSportId());
 
-        ApiResponseDTO apiResponseDTO = new ApiResponseDTO(AppMessages.REGION_CREATED, region);
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO(AppMessages.REGION_CREATED, RegionMapper.mapToDTO(region));
 
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.CREATED);
     }

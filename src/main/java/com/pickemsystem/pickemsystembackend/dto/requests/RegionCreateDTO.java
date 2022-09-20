@@ -11,5 +11,7 @@ public class RegionCreateDTO {
 
     @NotNull
     private String name;
+    @NotNull
+    private Integer sportId;
     private String imageURL;
 }

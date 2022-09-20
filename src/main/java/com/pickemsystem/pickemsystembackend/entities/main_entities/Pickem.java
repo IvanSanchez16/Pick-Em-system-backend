@@ -23,14 +23,25 @@ public class Pickem {
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
-    @JoinColumn(name = "created_by_id", nullable = false)
-    private User created_by;
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "invitation_code", nullable = false, unique = true, length = 8)
+    private String invitationCode;
+
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
+    }
 
     public String getDescription() {
         return description;
@@ -40,12 +51,12 @@ public class Pickem {
         this.description = description;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -56,12 +67,12 @@ public class Pickem {
         this.id = id;
     }
 
-    public User getCreated_by() {
-        return created_by;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreated_by(User created_by) {
-        this.created_by = created_by;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Boolean getIsPublic() {

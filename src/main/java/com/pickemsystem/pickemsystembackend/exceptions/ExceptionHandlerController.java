@@ -24,6 +24,11 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(new ApiResponseDTO(authExcepcion.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponseDTO> handleBadRequest(BadRequestException badRequestException) {
+        return new ResponseEntity<>(new ApiResponseDTO(badRequestException.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponseDTO> handleMethodArgumentNotValid(MethodArgumentNotValidException exception){
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();

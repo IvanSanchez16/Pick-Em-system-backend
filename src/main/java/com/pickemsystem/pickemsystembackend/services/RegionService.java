@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RegionService {
 
-    Region save(Region region);
+    Region save(Region region, int sportId);
 
     List<Region> findAll();
 }
