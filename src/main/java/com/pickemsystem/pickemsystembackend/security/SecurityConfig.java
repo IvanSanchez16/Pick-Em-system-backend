@@ -28,8 +28,11 @@ public class SecurityConfig{
 
         http.authorizeHttpRequests().antMatchers("/login").permitAll();
         http.authorizeHttpRequests().antMatchers("/registry").permitAll();
-        http.authorizeHttpRequests().antMatchers("/refreshToken").permitAll();
+        http.authorizeHttpRequests().antMatchers("/token/refresh").permitAll();
         http.authorizeHttpRequests().antMatchers("/verify/**").permitAll();
+        http.authorizeHttpRequests().antMatchers("/password/email/**").permitAll();
+        http.authorizeHttpRequests().antMatchers("/password/reset/**").permitAll();
+
         http.authorizeHttpRequests().anyRequest().authenticated();
 
         http.addFilterBefore(

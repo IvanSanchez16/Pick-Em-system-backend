@@ -13,6 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username = ?1")
     Optional<User> findByUsername(String username);
 
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = ?1")
+    Optional<User> findByEmail(String email);
+
     @Query("SELECT (COUNT(u) > 0) FROM User u WHERE UPPER(u.username) = UPPER(?1)")
     boolean existsByUsername(String username);
 
