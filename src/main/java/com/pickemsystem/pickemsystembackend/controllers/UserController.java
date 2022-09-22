@@ -9,6 +9,7 @@ import com.pickemsystem.pickemsystembackend.email.EmailSender;
 import com.pickemsystem.pickemsystembackend.entities.main_entities.ConfirmationToken;
 import com.pickemsystem.pickemsystembackend.entities.main_entities.PasswordResetToken;
 import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
+import com.pickemsystem.pickemsystembackend.exceptions.InternalServerErrorException;
 import com.pickemsystem.pickemsystembackend.mappers.UserMapper;
 import com.pickemsystem.pickemsystembackend.services.impl.ConfirmationTokenServiceImpl;
 import com.pickemsystem.pickemsystembackend.services.TokenService;
@@ -145,13 +146,13 @@ public class UserController {
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response){
+        ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String refreshToken = authorizationHeader.substring(7);
             String newAccessToken = userService.refreshAccessToken(request.getRequestURL().toString(), refreshToken);
 
-            ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
             Map<String, String> tokens = new HashMap<>();
             tokens.put("access_token", newAccessToken);
             tokens.put("refresh_token", refreshToken);
@@ -160,14 +161,18 @@ public class UserController {
 
             apiResponseDTO.setMessage(AppMessages.SUCCESSFUL_TOKEN_REFRESH);
             apiResponseDTO.setData(tokens);
-
-            try {
-                new ObjectMapper().writeValue(response.getOutputStream(), apiResponseDTO);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            // Token missing
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+            apiResponseDTO.setMessage(AppMessages.REFRESH_TOKEN_MISSING);
+        }
+
+        try {
+            new ObjectMapper().writeValue(response.getOutputStream(), apiResponseDTO);
+        } catch (IOException e) {
+            throw new InternalServerErrorException();
         }
     }
 

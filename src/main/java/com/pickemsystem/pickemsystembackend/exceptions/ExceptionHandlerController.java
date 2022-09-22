@@ -30,6 +30,11 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(new ApiResponseDTO(badRequestException.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<ApiResponseDTO> handleInternalServerError(InternalServerErrorException internalServerErrorException) {
+        return new ResponseEntity<>(new ApiResponseDTO(internalServerErrorException.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponseDTO> handleMethodArgumentNotValid(MethodArgumentNotValidException exception){
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();

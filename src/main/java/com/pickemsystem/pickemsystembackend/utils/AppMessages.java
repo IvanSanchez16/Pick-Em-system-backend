@@ -24,6 +24,7 @@ public class AppMessages {
     public static final String USERNAME_TAKEN = "This username is taken";
     public static final String USER_ALREADY_VERIFIED = "This user is already verified";
     public static final String REPEATED_PASSWORD = "The given password is the same than current";
+    public static final String REFRESH_TOKEN_MISSING = "Refresh token is missing";
 
     // Not found messages
     public static final String SPORT_NOT_FOUND = "The given sport do not exists";

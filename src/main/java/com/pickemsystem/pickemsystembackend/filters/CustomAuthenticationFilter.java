@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
+import static com.pickemsystem.pickemsystembackend.exceptions.ExceptionHandlerController.logException;
+import static com.pickemsystem.pickemsystembackend.utils.AppMessages.INVALID_REQUEST;
+
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -42,7 +44,17 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             username = loginDTO.getUsername();
             password = loginDTO.getPassword();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logException(e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+            ApiResponseDTO apiResponseDTO = new ApiResponseDTO(INVALID_REQUEST);
+            try {
+                new ObjectMapper().writeValue(response.getOutputStream(), apiResponseDTO);
+            } catch (IOException ex) {
+                logException(ex);
+            }
+            return null;
         }
 
         UsernamePasswordAuthenticationToken user = new UsernamePasswordAuthenticationToken(username, password);
