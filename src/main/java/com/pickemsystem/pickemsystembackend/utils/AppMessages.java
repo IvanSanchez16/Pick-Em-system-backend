@@ -23,6 +23,7 @@ public class AppMessages {
     public static final String EMAIL_TAKEN = "This email is already registered";
     public static final String USERNAME_TAKEN = "This username is taken";
     public static final String USER_ALREADY_VERIFIED = "This user is already verified";
+    public static final String REPEATED_PASSWORD = "The given password is the same than current";
 
     // Not found messages
     public static final String SPORT_NOT_FOUND = "The given sport do not exists";

@@ -1,6 +1,5 @@
 package com.pickemsystem.pickemsystembackend.filters;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import static java.util.Arrays.stream;
@@ -34,14 +34,12 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/login")
-                || request.getServletPath().equals("/registry")
-                || request.getServletPath().equals("/refreshToken"))
+        if (isTokenFreeEndpoint(request.getServletPath()))
             filterChain.doFilter(request, response);
         else {
-            String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")){
-                String token = autorizationHeader.substring(7);
+            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring(7);
 
                 DecodedJWT decodedJWT = null;
                 try {
@@ -68,5 +66,12 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             } else
                 filterChain.doFilter(request, response);
         }
+    }
+
+    private boolean isTokenFreeEndpoint(String endpoint) {
+        String[] tokenFreeEndpoints =
+                {"/login", "/registry", "/token/refresh", "/verify", "/password/email", "/password/reset"};
+
+        return Arrays.asList(tokenFreeEndpoints).contains(endpoint);
     }
 }

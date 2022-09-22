@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import static java.util.Arrays.stream;
-
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
@@ -78,6 +76,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User save(User user) {
         user.setPassword( encoderManager.encode(user.getPassword()) );
         return userRepository.save(user);
+    }
+
+    @Override
+    public boolean comparePasswords(User user, String newPassword) {
+        return encoderManager.matches(newPassword, user.getPassword());
     }
 
     @Override

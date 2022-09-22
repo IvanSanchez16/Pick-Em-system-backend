@@ -18,6 +18,8 @@ public interface UserService {
 
     User save(User user);
 
+    boolean comparePasswords(User user, String newPassword);
+
     boolean verifyUser(Long userId);
 
     public String refreshAccessToken(String requestURL, String refreshToken);

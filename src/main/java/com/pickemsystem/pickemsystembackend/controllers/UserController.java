@@ -10,8 +10,8 @@ import com.pickemsystem.pickemsystembackend.entities.main_entities.ConfirmationT
 import com.pickemsystem.pickemsystembackend.entities.main_entities.PasswordResetToken;
 import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
 import com.pickemsystem.pickemsystembackend.mappers.UserMapper;
-import com.pickemsystem.pickemsystembackend.services.ConfirmationTokenService;
-import com.pickemsystem.pickemsystembackend.services.PasswordResetTokenService;
+import com.pickemsystem.pickemsystembackend.services.impl.ConfirmationTokenServiceImpl;
+import com.pickemsystem.pickemsystembackend.services.TokenService;
 import com.pickemsystem.pickemsystembackend.services.UserService;
 import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import com.pickemsystem.pickemsystembackend.utils.EmailBuilder;
@@ -39,9 +39,9 @@ public class UserController {
 
     private final UserService userService;
 
-    private final ConfirmationTokenService confirmationTokenService;
+    private final TokenService<ConfirmationToken> confirmationTokenService;
 
-    private final PasswordResetTokenService passwordResetTokenService;
+    private final TokenService<PasswordResetToken> passwordResetTokenService;
 
     private final EmailSender emailSender;
 
@@ -66,11 +66,11 @@ public class UserController {
             return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
         }
 
+        apiResponseDTO.setMessage(AppMessages.USER_NOT_EXISTS);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    @RequestMapping("/registry")
+    @PostMapping("/registry")
     public ResponseEntity<ApiResponseDTO> save(@RequestBody @Valid UserCreateDTO userCreateDTO){
         ApiResponseDTO apiResponseDTO;
 
@@ -145,10 +145,10 @@ public class UserController {
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response){
-        String autorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (autorizationHeader != null && autorizationHeader.startsWith("Bearer ")) {
-            String refreshToken = autorizationHeader.substring(7);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String refreshToken = authorizationHeader.substring(7);
             String newAccessToken = userService.refreshAccessToken(request.getRequestURL().toString(), refreshToken);
 
             ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
@@ -211,6 +211,11 @@ public class UserController {
         LocalDateTime expireDateToken = passwordResetToken.getExpiredAt();
         if (now.isAfter(expireDateToken)){
             apiResponseDTO = new ApiResponseDTO(AppMessages.EXPIRED_TOKEN);
+            return new ResponseEntity<>(apiResponseDTO, HttpStatus.BAD_REQUEST);
+        }
+
+        if (userService.comparePasswords(user, userDTO.getNewPassword())){
+            apiResponseDTO = new ApiResponseDTO(AppMessages.REPEATED_PASSWORD);
             return new ResponseEntity<>(apiResponseDTO, HttpStatus.BAD_REQUEST);
         }
 

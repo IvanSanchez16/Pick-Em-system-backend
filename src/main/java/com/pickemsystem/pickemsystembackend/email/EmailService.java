@@ -1,7 +1,6 @@
 package com.pickemsystem.pickemsystembackend.email;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
+import static com.pickemsystem.pickemsystembackend.exceptions.ExceptionHandlerController.logException;
 
 @Service
 @AllArgsConstructor
@@ -30,8 +31,7 @@ public class EmailService implements EmailSender {
 
             mailSender.send(mimeMessage);
         } catch (MessagingException ex) {
-            // TODO - Manage when mail fails to send
-            System.out.println(ex.getMessage());
+            logException(ex);
         }
     }
 }

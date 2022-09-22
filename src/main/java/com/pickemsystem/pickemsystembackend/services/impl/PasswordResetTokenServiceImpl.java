@@ -2,7 +2,7 @@ package com.pickemsystem.pickemsystembackend.services.impl;
 
 import com.pickemsystem.pickemsystembackend.entities.main_entities.PasswordResetToken;
 import com.pickemsystem.pickemsystembackend.repositories.PasswordResetTokenRepository;
-import com.pickemsystem.pickemsystembackend.services.PasswordResetTokenService;
+import com.pickemsystem.pickemsystembackend.services.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class PasswordResetTokenServiceImpl implements PasswordResetTokenService {
+public class PasswordResetTokenServiceImpl implements TokenService<PasswordResetToken> {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 

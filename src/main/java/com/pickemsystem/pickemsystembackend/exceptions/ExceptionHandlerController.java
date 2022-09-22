@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ControllerAdvice
@@ -50,4 +51,22 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(new ApiResponseDTO(AppMessages.EXPIRED_TOKEN), HttpStatus.UNAUTHORIZED);
     }
 
+    public static void logException(Exception exception){
+        String[] classSplit = exception.getClass().getName().split("\\.");
+        String clase = classSplit[classSplit.length-1];
+
+        log.error("---------------------------------------------------");
+        log.error(String.format("%s: %s", clase,exception.getMessage()));
+        // Get exception origin
+        StackTraceElement[] st =
+                Arrays.stream(exception.getStackTrace())
+                        .filter(stackTraceElement -> stackTraceElement.getClassName().startsWith("com.pickemsystem"))
+                        .toArray(StackTraceElement[]::new);
+
+        int traceCount = Math.min(3, st.length);
+        for (int i = 0; i < traceCount; i++)
+            log.error(String.format("Stack trace: [File: %s | Method: %s | Line: %d]",
+                    st[i].getFileName(), st[i].getMethodName(), st[i].getLineNumber()));
+        log.error("---------------------------------------------------");
+    }
 }

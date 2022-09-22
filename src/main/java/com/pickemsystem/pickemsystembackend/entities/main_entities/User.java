@@ -44,6 +44,9 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
     @Column(name = "image_url", nullable = false, length = 120)
     private String imageUrl;
 
@@ -58,6 +61,12 @@ public class User {
     @PrePersist
     private void saveCreatedAt(){
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void saveUpdatedAt() {
+        this.updatedAt = LocalDateTime.now();
     }
 
     public String getImageUrl() {
@@ -66,6 +75,14 @@ public class User {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Set<Pickem> getPickems() {
