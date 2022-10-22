@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class RegionDTO {
+public class TeamDTO {
 
-    private Integer id;
+    private Long id;
     private String name;
     private String imageUrl;
 }

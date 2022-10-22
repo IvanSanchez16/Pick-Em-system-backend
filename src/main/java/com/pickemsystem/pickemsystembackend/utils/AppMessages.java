@@ -9,6 +9,7 @@ public class AppMessages {
     public static final String SUCCESSFUL_LOGIN = "Successful login";
     public static final String SUCCESSFUL_TOKEN_REFRESH = "Successful token refresh";
     public static final String REGION_CREATED = "Region created correctly";
+    public static final String TEAM_CREATED = "Team created correctly";
     public static final String USER_VERIFIED = "Email verified correctly";
     public static final String EMAIL_CONFIRMATION_MAIL_SENT = "Confirmation mail sent correctly";
     public static final String EMAIL_PASSWORD_RESET_MAIL_SENT = "Password reset mail sent correctly";
@@ -28,5 +29,6 @@ public class AppMessages {
 
     // Not found messages
     public static final String SPORT_NOT_FOUND = "The given sport do not exists";
+    public static final String REGION_NOT_FOUND = "The given region do not exists";
     public static final String EMAIL_NOT_FOUND = "We can't find a user with the provided email";
 }

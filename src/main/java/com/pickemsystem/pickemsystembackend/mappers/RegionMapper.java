@@ -23,8 +23,7 @@ public class RegionMapper {
 
         regionDTO.setId(region.getId());
         regionDTO.setName(region.getName());
-        regionDTO.setImageURL(region.getImageUrl());
-        regionDTO.setSport(region.getSport().getName());
+        regionDTO.setImageUrl(region.getImageUrl());
 
         return regionDTO;
     }

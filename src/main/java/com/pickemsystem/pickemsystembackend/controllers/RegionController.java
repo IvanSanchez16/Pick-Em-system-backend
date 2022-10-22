@@ -2,9 +2,10 @@ package com.pickemsystem.pickemsystembackend.controllers;
 
 import com.pickemsystem.pickemsystembackend.dto.requests.RegionCreateDTO;
 import com.pickemsystem.pickemsystembackend.dto.responses.ApiResponseDTO;
+import com.pickemsystem.pickemsystembackend.dto.responses.RegionDTO;
 import com.pickemsystem.pickemsystembackend.entities.matches_entities.Region;
 import com.pickemsystem.pickemsystembackend.mappers.RegionMapper;
-import com.pickemsystem.pickemsystembackend.services.RegionService;
+import com.pickemsystem.pickemsystembackend.services.matches_services.RegionService;
 import com.pickemsystem.pickemsystembackend.utils.AppMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,11 +23,15 @@ public class RegionController {
 
     private final RegionService regionService;
 
-    @GetMapping
-    public ResponseEntity<ApiResponseDTO> getAllRegions(){
+    @GetMapping("/sport/{sportId}")
+    public ResponseEntity<ApiResponseDTO> getBySport(@PathVariable int sportId) {
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
-        apiResponseDTO.setData(regionService.findAll());
+        List<RegionDTO> regionDTOS = new ArrayList<>();
+        List<Region> regions = regionService.findBySportId(sportId);
+        regions.forEach(region -> regionDTOS.add(RegionMapper.mapToDTO(region)));
+
+        apiResponseDTO.setData(regionDTOS);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
     }
 
