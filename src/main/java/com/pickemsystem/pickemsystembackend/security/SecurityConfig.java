@@ -32,6 +32,9 @@ public class SecurityConfig{
         http.authorizeHttpRequests().antMatchers("/password/email/**").permitAll();
         http.authorizeHttpRequests().antMatchers("/password/reset/**").permitAll();
 
+        // Images urls
+        http.authorizeHttpRequests().antMatchers("/**/image/**").permitAll();
+
         http.authorizeHttpRequests().anyRequest().authenticated();
 
         http.addFilterBefore(

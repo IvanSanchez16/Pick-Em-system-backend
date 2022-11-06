@@ -11,7 +11,6 @@ public class UserMapper {
 
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
-        userDTO.setImageUrl(user.getImageUrl());
 
         return userDTO;
     }
@@ -22,7 +21,6 @@ public class UserMapper {
         user.setEmail(userCreateDTO.getEmail());
         user.setUsername(userCreateDTO.getUsername());
         user.setPassword(userCreateDTO.getPassword() );
-        user.setImageUrl("");
 
         return user;
     }

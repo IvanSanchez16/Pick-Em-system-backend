@@ -47,9 +47,6 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "image_url", nullable = false, length = 120)
-    private String imageUrl;
-
     public Set<Role> getRoles() {
         return roles;
     }
@@ -67,14 +64,6 @@ public class User {
     @PreUpdate
     private void saveUpdatedAt() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public LocalDateTime getUpdatedAt() {

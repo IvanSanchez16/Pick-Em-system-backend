@@ -4,6 +4,7 @@ import com.pickemsystem.pickemsystembackend.utils.InvalidRequestMessages;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -20,4 +21,5 @@ public class UserCreateDTO {
     private String email;
     @NotNull(message = InvalidRequestMessages.NOTNULL_PASSWORD)
     private String password;
+    private MultipartFile image;
 }

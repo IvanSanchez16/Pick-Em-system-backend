@@ -10,8 +10,9 @@ import com.pickemsystem.pickemsystembackend.entities.main_entities.ConfirmationT
 import com.pickemsystem.pickemsystembackend.entities.main_entities.PasswordResetToken;
 import com.pickemsystem.pickemsystembackend.entities.main_entities.User;
 import com.pickemsystem.pickemsystembackend.exceptions.InternalServerErrorException;
+import com.pickemsystem.pickemsystembackend.images.EntityType;
+import com.pickemsystem.pickemsystembackend.images.ImageManager;
 import com.pickemsystem.pickemsystembackend.mappers.UserMapper;
-import com.pickemsystem.pickemsystembackend.services.impl.ConfirmationTokenServiceImpl;
 import com.pickemsystem.pickemsystembackend.services.TokenService;
 import com.pickemsystem.pickemsystembackend.services.UserService;
 import com.pickemsystem.pickemsystembackend.utils.AppMessages;
@@ -22,14 +23,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,6 +45,8 @@ import java.util.*;
 public class UserController {
 
     private final UserService userService;
+
+    private final ImageManager imageManager;
 
     private final TokenService<ConfirmationToken> confirmationTokenService;
 
@@ -71,8 +79,8 @@ public class UserController {
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/registry")
-    public ResponseEntity<ApiResponseDTO> save(@RequestBody @Valid UserCreateDTO userCreateDTO){
+    @PostMapping(value = "/registry", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponseDTO> save(@ModelAttribute @Valid UserCreateDTO userCreateDTO){
         ApiResponseDTO apiResponseDTO;
 
         if (userService.existsByEmail(userCreateDTO.getEmail())){
@@ -88,6 +96,9 @@ public class UserController {
         User user = UserMapper.mapToEntity(userCreateDTO);
         userService.save(user);
 
+        // Async actions
+        if (userCreateDTO.getImage() != null)
+            imageManager.resizeAndSaveFile(userCreateDTO.getImage(), EntityType.USER, user.getId());
         createAndSendEmailToken(user);
 
         UserDTO userDTO = UserMapper.mapToDTO(user);
@@ -195,7 +206,7 @@ public class UserController {
     }
 
     @PostMapping("/password/reset")
-    private ResponseEntity<ApiResponseDTO> passwordReset(@RequestBody @Valid UserPasswordChangeDTO userDTO, @RequestParam String token) {
+    public ResponseEntity<ApiResponseDTO> passwordReset(@RequestBody @Valid UserPasswordChangeDTO userDTO, @RequestParam String token) {
         ApiResponseDTO apiResponseDTO;
 
         Optional<User> optionalUser = userService.findByUsername(userDTO.getUsername());
@@ -234,7 +245,7 @@ public class UserController {
     }
 
     @PostMapping("/password/email")
-    private ResponseEntity<ApiResponseDTO> requestPasswordReset(@RequestParam String email) {
+    public ResponseEntity<ApiResponseDTO> requestPasswordReset(@RequestParam String email) {
         ApiResponseDTO apiResponseDTO;
 
         Optional<User> optionalUser = userService.findByEmail(email);
@@ -260,6 +271,18 @@ public class UserController {
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/users/image/{userId}",
+            produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] getImage(@PathVariable long userId) throws IOException {
+        File file = imageManager.getImage(EntityType.USER, userId);
+
+        BufferedImage bufferedImage = ImageIO.read(file);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "png", bos);
+        return bos.toByteArray();
+    }
+
+    @Async
     private void createAndSendEmailToken(User user) {
         ConfirmationToken confirmationToken = new ConfirmationToken();
         confirmationToken.setUuid(UUID.randomUUID());

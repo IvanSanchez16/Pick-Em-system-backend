@@ -2,6 +2,7 @@ package com.pickemsystem.pickemsystembackend.dto.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,5 +14,6 @@ public class RegionCreateDTO {
     private String name;
     @NotNull
     private Integer sportId;
-    private String imageURL;
+    private MultipartFile image;
+
 }

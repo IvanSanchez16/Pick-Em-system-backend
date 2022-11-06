@@ -16,9 +16,6 @@ public class Region {
     @Column(name = "name", nullable = false, length = 40)
     private String name;
 
-    @Column(name = "image_url", nullable = false, length = 120)
-    private String imageUrl;
-
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "sport_id", nullable = false)
     private Sport sport;
@@ -37,14 +34,6 @@ public class Region {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getName() {

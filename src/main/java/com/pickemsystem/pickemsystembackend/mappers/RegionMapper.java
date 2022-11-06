@@ -10,10 +10,6 @@ public class RegionMapper {
         Region region = new Region();
 
         region.setName(regionCreateDTO.getName());
-        if (regionCreateDTO.getImageURL() != null)
-            region.setImageUrl(regionCreateDTO.getImageURL());
-        else
-            region.setImageUrl("");
 
         return region;
     }
@@ -23,7 +19,6 @@ public class RegionMapper {
 
         regionDTO.setId(region.getId());
         regionDTO.setName(region.getName());
-        regionDTO.setImageUrl(region.getImageUrl());
 
         return regionDTO;
     }

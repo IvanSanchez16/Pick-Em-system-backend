@@ -10,10 +10,6 @@ public class TeamMapper {
         Team team = new Team();
 
         team.setName(teamCreateDTO.getName());
-        if (teamCreateDTO.getImageURL() != null)
-            team.setImageUrl(teamCreateDTO.getImageURL());
-        else
-            team.setImageUrl("");
 
         return team;
     }
@@ -23,7 +19,6 @@ public class TeamMapper {
 
         teamDTO.setId(team.getId());
         teamDTO.setName(team.getName());
-        teamDTO.setImageUrl(team.getImageUrl());
 
         return teamDTO;
     }

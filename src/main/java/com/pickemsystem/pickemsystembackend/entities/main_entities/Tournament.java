@@ -25,9 +25,6 @@ public class Tournament {
     @Column(name = "is_public", nullable = false)
     private Boolean isPublic = false;
 
-    @Column(name = "image_url", nullable = false, length = 120)
-    private String imageUrl;
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
@@ -97,14 +94,6 @@ public class Tournament {
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public Boolean getIsPublic() {

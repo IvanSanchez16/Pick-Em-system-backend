@@ -13,9 +13,6 @@ public class Team {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "image_url", nullable = false, length = 120)
-    private String imageUrl;
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
@@ -26,14 +23,6 @@ public class Team {
 
     public void setRegion(Region region) {
         this.region = region;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getName() {

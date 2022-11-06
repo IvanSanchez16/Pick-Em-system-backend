@@ -11,5 +11,4 @@ public class RegionDTO {
 
     private Integer id;
     private String name;
-    private String imageUrl;
 }
